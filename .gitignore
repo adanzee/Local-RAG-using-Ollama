@@ -1,0 +1,21 @@
+#python cache file 
+__pycache__/
+*.py[cod]
+*$py.class
+
+#VirtualEnvironment 
+venv/
+env/
+.venv/
+
+#Logs
+.log
+
+#VScode
+.vscode
+.tmp
+
+# Ignore large data files
+data/*.pdf
+data/*.docx
+data/*.txt
