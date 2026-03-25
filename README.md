@@ -96,7 +96,7 @@ This will:
 
 ### 2. Run Chatbot
 
-Run the local RAG chatbot to ask questions over your documents:
+Run the local RAG chatbot to ask questions about your documents:
 
 ```bash
 python llm_query.py
@@ -108,15 +108,6 @@ Follow the prompts:
 2. Ask questions in a loop (type `quit` or `exit` to stop)
 
 > The chatbot retrieves the most relevant chunks from your database and generates answers using Ollama.
-
----
-
-## Notes
-
-* Ensure `.env` and `venv/` are not committed to GitHub.
-* Use a virtual environment (`venv`) to avoid dependency conflicts.
-* The system works fully locally — no cloud services required.
-* All embeddings and chat history are stored in the database for context-aware responses.
 
 ---
 
