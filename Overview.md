@@ -45,8 +45,8 @@ No other formats are currently supported.
 
 ---
 
-<img src="C:\Users\devel\Pictures\Screenshots\Screenshot 2026-03-27 210309.png" alt="Alt text" width="400" height="200">
 
+<img width="707" height="483" alt="Screenshot 2026-03-27 210309" src="https://github.com/user-attachments/assets/9e8d263d-887b-464d-9782-6b5e1ae44608" />
 
 ### Phase 1 — Ingestion
 
