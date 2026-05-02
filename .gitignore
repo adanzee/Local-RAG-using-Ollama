@@ -23,5 +23,4 @@ data/*.pdf
 data/*.docx
 data/*.txt
 .claude
-.env.example
 .planning 
