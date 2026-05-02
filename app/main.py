@@ -1,45 +1,38 @@
-import os
-import sys
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.insert(0, current_dir)
-lib_path = r"path_to_your_project"
-if lib_path not in sys.path:
-    sys.path.insert(0, lib_path)
+import logging
+from app.config import DatabaseConfig, EmbeddingConfig
+from app.database import DatabaseHandler
+from app.logging_config import configure_logging
+from app.services.embedding_service import EmbeddingService
+from app.services.chunking_service import ChunkingService
+from app.services.ingestion_service import IngestionService
 
 
-from model import ModelHandler
-from database import DatabaseHandler
-from engine import load_and_process_document
+def main():
+    configure_logging()
+    logger = logging.getLogger(__name__)
+    db = None
+
+    try:
+        db = DatabaseHandler(DatabaseConfig())
+        embedding_service = EmbeddingService(EmbeddingConfig())
+        chunking_service = ChunkingService(EmbeddingConfig())
+        ingestion_service = IngestionService(db, embedding_service, chunking_service)
+
+        file_path = input("Enter the path to the document: ").strip()
+        chunk_count = ingestion_service.ingest_file(file_path)
+
+        if chunk_count == 0:
+            print("Document already exists in the database.")
+        else:
+            print(f"Successfully ingested {chunk_count} chunks.")
+
+    except Exception as exc:
+        logger.exception("Failed to ingest document")
+        print(f"Error during ingestion: {exc}")
+    finally:
+        if db is not None:
+            db.close_connection()
 
 
 if __name__ == "__main__":
-    file_path = input("Enter the path to the document: ")
-    chunks = load_and_process_document(file_path)
-    print("Generating embeddings for chunk!")
-    modelhandler = ModelHandler()
-
-    print("opening a db connection")
-    db = DatabaseHandler(
-        dbname="dbname", port=port, password="password", host="host", user="user"
-    )
-    outer_batch_size = 8
-    for i in range(0, len(chunks), outer_batch_size):
-        batch_chunks = chunks[i : i + outer_batch_size]
-        embeddings = modelhandler.embed_text(batch_chunks)
-
-        print("Embeddings for the first chunk:", embeddings.shape)
-        print("Chunks created from the document:")
-
-        # Storing the chunks and embeddings in db
-        docs_name = os.path.basename(file_path)
-        for txt, vec in zip(batch_chunks, embeddings):
-            db.insert_text(txt, vec.tolist(), docs_name)
-
-    for i, chunk in enumerate(chunks):
-        print(f"Chunk {i + 1}: {chunk} \n {'---' * 40}")
-
-    print("All chunks and embeddings stored successfully in the database!")
-    db.close_connection()
-    print("RAG pipeline executed successfully!")
+    main()

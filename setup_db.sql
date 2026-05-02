@@ -17,10 +17,17 @@ ALTER TABLE docs
 ADD COLUMN IF NOT EXISTS docs_name TEXT NOT NULL;
 
 ALTER TABLE docs
+ADD COLUMN IF NOT EXISTS file_hash TEXT;
+
+ALTER TABLE docs
+ADD COLUMN IF NOT EXISTS metadata JSONB;
+
+ALTER TABLE docs
 ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW ();
 
 -- Adding the HNSW index for the embedding column to speed up similarity search
 CREATE INDEX IF NOT EXISTS idx_docs_embedding ON docs USING hnsw (embedding vector_cosine_ops);
+CREATE INDEX IF NOT EXISTS idx_docs_file_hash ON docs (file_hash);
 
 -- Adding a chat history table 
 CREATE TABLE
