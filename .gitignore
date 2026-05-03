@@ -1,6 +1,6 @@
 #python cache file 
 __pycache__/
-*.py[cod]
+
 *$py.class
 
 #VirtualEnvironment 
@@ -15,7 +15,13 @@ env/
 .vscode
 .tmp
 
+# Environment files
+.env
+
 # Ignore large data files
 data/*.pdf
 data/*.docx
 data/*.txt
+.claude
+.planning 
+phases/

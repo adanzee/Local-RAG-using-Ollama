@@ -11,7 +11,7 @@ A local AI-powered retrieval-augmented generation (RAG) system that allows you t
 - Vector similarity search for context retrieval  
 - Chat history storage  
 - Answer generation using local LLM (Ollama)
-- **Command-line interface only (no GUI)**  
+- Command-line interface and Streamlit web GUI
 
 ---
 
@@ -28,13 +28,25 @@ A local AI-powered retrieval-augmented generation (RAG) system that allows you t
 
 - Python 3.12+  
 - PostgreSQL with pgvector extension  
-- Packages listed in `requirements.txt.`
+- Packages listed in `requirements.txt`
 
 Install Python packages:
 
 ```bash
 pip install -r requirements.txt
-````
+```
+
+---
+
+## Environment Configuration
+
+Copy the example configuration:
+
+```bash
+copy .env.example .env
+```
+
+Update `.env` with your Postgres and Ollama settings.
 
 ---
 
@@ -58,16 +70,23 @@ project/
 ├── app/
 │   ├── __init__.py
 │   ├── check_db.py
-│   ├── chunking.py
+│   ├── config.py
 │   ├── database.py
-│   ├── engine.py
-│   ├── ingestion.py
-│   ├── ingestion_query.py
 │   ├── llm_query.py
+│   ├── logging_config.py
 │   ├── main.py
-│   └── model.py
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── chunking_service.py
+│   │   ├── document_service.py
+│   │   ├── embedding_service.py
+│   │   ├── ingestion_service.py
+│   │   ├── llm_service.py
+│   │   └── query_service.py
+│   └── streamlit_app.py
 ├── data/               # Store your PDF and DOCX files here
 ├── venv/               # Virtual environment (ignored in Git)
+├── .env.example        # Environment example
 ├── .env                # Environment variables (ignored in Git)
 ├── .gitignore
 ├── requirements.txt
@@ -80,10 +99,10 @@ project/
 
 ### 1. Upload / Ingest Documents
 
-Add your PDF or DOCX files to the `data/` folder, then run:
+Run the ingestion command:
 
 ```bash
-python main.py
+python app/main.py
 ```
 
 This will:
@@ -96,10 +115,10 @@ This will:
 
 ### 2. Run Chatbot
 
-Run the local RAG chatbot to ask questions about your documents:
+Continue asking questions about ingested documents:
 
 ```bash
-python llm_query.py
+python app/llm_query.py
 ```
 
 Follow the prompts:
@@ -107,7 +126,17 @@ Follow the prompts:
 1. Select the document you want answers from
 2. Ask questions in a loop (type `quit` or `exit` to stop)
 
-> The chatbot retrieves the most relevant chunks from your database and generates answers using Ollama.
+---
+
+### 3. Run Streamlit GUI
+
+Start the new web interface:
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+Use the sidebar to switch between ingesting documents and chatting with them.
 
 ---
 
