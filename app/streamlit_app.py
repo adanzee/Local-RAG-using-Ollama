@@ -74,18 +74,24 @@ def ingestion_page():
         try:
             if uploaded_file is not None:
                 path = save_uploaded_file(uploaded_file)
+                try:
+                    count = services["ingestion_service"].ingest_file(path)
+                    if count == 0:
+                        st.info("This document is already ingested.")
+                    else:
+                        st.success(f"Ingested {count} chunks successfully.")
+                finally:
+                    os.unlink(path)  # Clean up temp file
             else:
                 path = file_path.strip()
-
-            if not path:
-                st.error("Please upload a file or provide a valid path.")
-                return
-
-            count = services["ingestion_service"].ingest_file(path)
-            if count == 0:
-                st.info("This document is already ingested.")
-            else:
-                st.success(f"Ingested {count} chunks successfully.")
+                if not path:
+                    st.error("Please upload a file or provide a valid path.")
+                    return
+                count = services["ingestion_service"].ingest_file(path)
+                if count == 0:
+                    st.info("This document is already ingested.")
+                else:
+                    st.success(f"Ingested {count} chunks successfully.")
         except Exception as exc:
             st.error(f"Ingestion failed: {exc}")
 

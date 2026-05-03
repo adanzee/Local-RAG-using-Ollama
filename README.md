@@ -70,16 +70,11 @@ project/
 ├── app/
 │   ├── __init__.py
 │   ├── check_db.py
-│   ├── chunking.py
 │   ├── config.py
 │   ├── database.py
-│   ├── engine.py
-│   ├── ingestion.py
-│   ├── ingestion_query.py
 │   ├── llm_query.py
 │   ├── logging_config.py
 │   ├── main.py
-│   ├── model.py
 │   ├── services/
 │   │   ├── __init__.py
 │   │   ├── chunking_service.py

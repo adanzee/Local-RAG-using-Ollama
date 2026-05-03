@@ -18,6 +18,10 @@ def test_handshake():
         db.insert_text(test_text, test_vector, "test_document", file_hash="test-handshake")
         print("Dummy text inserted successfully!")
 
+        # Clean up the test record
+        db.delete_by_file_hash("test-handshake")
+        print("Test record cleaned up.")
+
     except Exception as e:
         print("Error connecting to database:", e)
 

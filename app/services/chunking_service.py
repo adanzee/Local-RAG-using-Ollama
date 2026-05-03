@@ -39,7 +39,9 @@ class ChunkingService:
             if end >= text_length:
                 break
 
-            start = max(end - self.overlap, end)
+            start = max(0, end - self.overlap)
+            if start >= end:
+                start = end - 1  # Ensure forward progress
 
         logger.info("Chunked text into %d pieces", len(chunks))
         return chunks

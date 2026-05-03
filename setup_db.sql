@@ -29,6 +29,9 @@ ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW ();
 CREATE INDEX IF NOT EXISTS idx_docs_embedding ON docs USING hnsw (embedding vector_cosine_ops);
 CREATE INDEX IF NOT EXISTS idx_docs_file_hash ON docs (file_hash);
 
+-- Add unique constraint on file_hash to prevent duplicates
+ALTER TABLE docs ADD CONSTRAINT IF NOT EXISTS unique_file_hash UNIQUE (file_hash);
+
 -- Adding a chat history table 
 CREATE TABLE
     IF NOT EXISTS chat_history (

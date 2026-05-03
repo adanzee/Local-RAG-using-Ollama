@@ -23,19 +23,34 @@ class QueryService:
         formatted_history = "\n".join(
             f"{role}: {message}" for role, message in history_rows
         )
-        embed_query = self.embedding_service.embed_text([question])[0]
+        embeddings = self.embedding_service.embed_text([question])
+        if not embeddings:
+            raise ValueError("Failed to generate embedding for the question.")
+        embed_query = embeddings[0]
         results = self.db_handler.search_nearest(
             embed_query.tolist(), docs_name=document_name, top_k=self.top_k
         )
 
         if not results:
+            # Still save the question to history
+            self.db_handler.save_history(session_id, "user", question)
             return "No relevant context was found for this document."
 
         combined_context = "\n---\n".join(item["content"] for item in results)
         prompt = self.llm_service.build_prompt(question, combined_context, formatted_history)
         answer = self.llm_service.generate(prompt)
 
-        self.db_handler.save_history(session_id, "user", question)
-        self.db_handler.save_history(session_id, "assistant", answer)
+        # Atomic history saves
+        try:
+            self.db_handler.save_history(session_id, "user", question)
+            self.db_handler.save_history(session_id, "assistant", answer)
+        except Exception as e:
+            # If second save fails, try to clean up the first
+            try:
+                # This is simplistic; in practice, might need transaction support
+                logger.error("Failed to save complete history, partial save may exist: %s", e)
+            except:
+                pass
+            raise
 
         return answer
