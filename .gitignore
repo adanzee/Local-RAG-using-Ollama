@@ -23,5 +23,6 @@ data/*.pdf
 data/*.docx
 data/*.txt
 .claude
-.planning 
+.planning/
 phases/
+
