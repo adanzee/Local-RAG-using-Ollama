@@ -38,17 +38,6 @@ pip install -r requirements.txt
 
 ---
 
-## Environment Configuration
-
-Copy the example configuration:
-
-```bash
-copy .env.example .env
-```
-
-Update `.env` with your Postgres and Ollama settings.
-
----
 
 ## Database Setup
 
