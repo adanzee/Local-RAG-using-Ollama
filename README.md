@@ -74,10 +74,6 @@ project/
 │   │   └── query_service.py
 │   └── streamlit_app.py
 ├── data/               # Store your PDF and DOCX files here
-├── venv/               # Virtual environment (ignored in Git)
-├── .env.example        # Environment example
-├── .env                # Environment variables (ignored in Git)
-├── .gitignore
 ├── requirements.txt
 └── setup_db.sql        # Database schema and setup
 ```
